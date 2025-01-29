@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Navbar with Footer</title>
+    <title>Responsive Product Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
@@ -20,32 +20,31 @@
             color: white;
             text-align: center;
             padding: 10px 0;
-            position: fixed;
-            bottom: 0;
+            position: relative;
             width: 100%;
+            margin-top: 50px;
         }
-
     </style>
 </head>
 <body onload="bodyLoad()">
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark mb-3">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+    <div class="container">
         <a class="navbar-brand fw-bold" href="#">ProductManagement</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
+            <ul class="navbar-nav mx-auto text-center">
                 <li class="nav-item">
                     <a class="nav-link fw-bold text-white" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link fw-bold text-white ms-5" href="Contact.html">Contact</a>
+                    <a class="nav-link fw-bold text-white ms-lg-5" href="Contact.html">Contact</a>
                 </li>
             </ul>
-            <div class="auth-buttons">
+            <div class="auth-buttons text-center">
                 <a href="#" class="btn btn-outline-light">Login</a>
                 <a href="#" class="btn btn-light">Register</a>
             </div>
@@ -54,161 +53,110 @@
 </nav>
 
 <!-- Content Area -->
-<div class="container p-3 w-50 shadow-lg d-flex justify-content-center align-items-center flex-column mt-5">
-    <h2 class="text-primary text-decoration-underline pb-3">Product Managment</h2>
-    <div class="input-group w-75">
-        <input type="text" name="" id="txtProduct" placeholder="Add Product..." class="form-control">
-        <button class="btn btn-primary fw-bold" onclick="AddClick()">Add Product</button>
-    </div>
-
-    <div class="mt-3 w-75">
-        <h2>Product List</h2>
-        <div>
-            <div>
-                <button class="btn btn-success bi bi-sort-alpha-up" onclick="SortAsc()"></button>
-                <button class="btn btn-success bi bi-sort-alpha-down" onclick="SortDesc()"></button>
-            </div>
-
-            <table class="table table-bordered w-100 mt-3">
-                <thead class="table-dark text-center">
-                    <tr>
-                        <th>#</th>
-                        <th>Product</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tblProductsBody">
-                    <!-- Dynamically Insert Here   -->
-                </tbody>
-            </table>
-            <div class="mt-3">
-                <label for="" id="lblCount" class="fw-bold">Total No. Products</label>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 p-4 shadow-lg rounded text-center">
+            <h2 class="text-primary text-decoration-underline pb-3">Product Management</h2>
+            <div class="input-group">
+                <input type="text" id="txtProduct" placeholder="Add Product..." class="form-control">
+                <button class="btn btn-primary fw-bold" onclick="AddClick()">Add</button>
             </div>
             <div class="mt-3">
-                <button onclick="ClearClick()" class="btn btn-danger fw-bold">All Clear <span
-                        class="bi bi-trash-fill"></span></button>
+                <h3>Product List</h3>
+                <div>
+                    <button class="btn btn-success bi bi-sort-alpha-up" onclick="SortAsc()"></button>
+                    <button class="btn btn-success bi bi-sort-alpha-down" onclick="SortDesc()"></button>
+                </div>
+                <table class="table table-bordered mt-3">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblProductsBody"></tbody>
+                </table>
+                <div>
+                    <label id="lblCount" class="fw-bold">Total No. Products</label>
+                </div>
+                <button onclick="ClearClick()" class="btn btn-danger fw-bold mt-3">Clear All <span class="bi bi-trash-fill"></span></button>
             </div>
         </div>
     </div>
 </div>
 
-
-
 <!-- Footer -->
-<footer class="footer">
+<footer class="footer mt-5">
     <div class="container">
-        <h5 class="mb-0">&copy; 2025 Made by <b>Himanshu Mishra</b> | IT Engineer</h5>
-        <p class="mt-2 fw-bold">+91 6387795500 || mishrahimanshuu01@gmail.com</p>
+        <h5>&copy; 2025 Made by <b>Himanshu Mishra</b> | IT Engineer</h5>
+        <p class="fw-bold">+91 6387795500 || mishrahimanshuu01@gmail.com</p>
     </div>
 </footer>
 
 <script>
-    var products = JSON.parse(localStorage.getItem('products')) || []
-        var editIndex = -1;
+    var products = JSON.parse(localStorage.getItem('products')) || [];
+    var editIndex = -1;
+    
+    function LoadProducts(){
+        const tableBody = document.getElementById('tblProductsBody');
+        tableBody.innerHTML = '';
 
-        
-        function LoadProducts(){
-            const tableBody = document.getElementById('tblProductsBody');
-            tableBody.innerHTML = ''  //Clear Existing Rows
+        products.forEach((product, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${index+1}</td>
+                             <td>${product}</td>
+                             <td>
+                                 <button class='btn btn-danger btn-sm' onclick='RemoveProduct("${product}")'>Remove</button>
+                                 <button class='btn btn-warning btn-sm text-white ms-2' onclick='EditClick(${index})'>Update</button>
+                             </td>`;
+            tableBody.appendChild(row);
+        });
+        document.getElementById('lblCount').textContent = `Total Number of Products: ${products.length}`;
+    }
 
-            products.forEach((product,index)=>{
-                const row = document.createElement('tr');
-
-                const cellIndex = document.createElement('td');
-                cellIndex.innerHTML = index+1
-
-                const cellProduct = document.createElement('td');
-                cellProduct.textContent = product;
-
-                const cellActions = document.createElement('td');
-
-                const removeBtn = document.createElement('button')
-                removeBtn.textContent = 'Remove';
-                removeBtn.className = 'btn btn-danger btn-sm';
-                removeBtn.onclick =()=> RemoveProduct(product);
-
-                const editBtn = document.createElement('button');
-                editBtn.textContent = 'Update';
-                editBtn.className = 'btn btn-warning btn-sm text-white ms-2'
-                editBtn.onclick =()=> EditClick(index);
-
-                cellActions.appendChild(removeBtn)
-                cellActions.appendChild(editBtn)
-
-                row.appendChild(cellIndex)
-                row.appendChild(cellProduct)
-                row.appendChild(cellActions)
-
-                tableBody.appendChild(row)
-            });
-            document.getElementById('lblCount').innerHTML = `Total Number of Products:${products.length}`
-
-        }
-
-        function bodyLoad(){
-            LoadProducts();
-        }
-
-        function AddClick(){
-            const productName = document.getElementById('txtProduct').value.trim();
-            if(productName === ''){
-                alert('Please Enter Valid Product..')
-                return
-            }
-            
-            if(editIndex >=0 ){
-                products[editIndex] = productName;
-                alert(`${productName} updated Successfully...`)
-                editIndex = -1;
-            }
-            else{
-                if(!products.includes(productName)){
+    function bodyLoad(){ LoadProducts(); }
+    function AddClick(){
+        const productName = document.getElementById('txtProduct').value.trim();
+        if (!productName) { alert('Please Enter Valid Product..'); return; }
+        if (editIndex >= 0) {
+            products[editIndex] = productName;
+            alert(`${productName} updated Successfully...`);
+            editIndex = -1;
+        } else {
+            if (!products.includes(productName)) {
                 products.push(productName);
-                localStorage.setItem('products',JSON.stringify(products))
-                alert(`${productName} added successfully..`)
+                alert(`${productName} added successfully..`);
                 document.getElementById('txtProduct').value = '';
-                LoadProducts();
+            } else {
+                alert(`${productName} already exists..`);
             }
-            else{
-                alert(`${productName} already exists..`)
-            }
-            }
+        }
+        localStorage.setItem('products', JSON.stringify(products));
+        LoadProducts();
+    }
+
+    function EditClick(index){
+        document.getElementById('txtProduct').value = products[index];
+        editIndex = index;
+    }
+
+    function SortAsc(){ products.sort(); LoadProducts(); }
+    function SortDesc(){ products.sort().reverse(); LoadProducts(); }
+    function RemoveProduct(product){
+        if (confirm('Are you sure want to Remove?')) {
+            products = products.filter(prod => prod !== product);
+            localStorage.setItem('products', JSON.stringify(products));
             LoadProducts();
         }
-
-        function EditClick(index){
-            document.getElementById('txtProduct').value = products[index]
-            editIndex = index;
-        }
-
-        function SortAsc(){
-            products.sort();
+    }
+    function ClearClick(){
+        if (confirm('Are you sure want to clear all Items..')) {
+            products = [];
             LoadProducts();
         }
-
-        function SortDesc(){
-            products.sort().reverse();
-            LoadProducts();
-        }
-
-        function RemoveProduct(product){
-            const confirmRemove = confirm('Are you sure want to Remove?');
-            if(confirmRemove){
-                products = products.filter(prod => prod!== product)
-                localStorage.setItem('products',JSON.stringify(products))
-                LoadProducts()
-            }
-        }
-
-        function ClearClick(){
-            const allClear = confirm('Are you sure want to clear all Items..');
-            if(allClear){
-                products = []
-                LoadProducts()
-            }
-        }
+    }
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
